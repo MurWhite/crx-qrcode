@@ -1,16 +1,27 @@
 /**
  * A schema is something like [[protocol]]://[[path]]?[[queryKeyValuePairsConnectedBy&]]
  */
-export default {
-    convert(pattern, url, options) {
-        let result = pattern;
-        const encodedUrl = encodeURIComponent(url);
-        result = result.replace(/\[\[encodedUrl\]\]/g, `url=${encodedUrl}`);
 
+const builtinOptions = {
+    originalText: function (text) {
+        return text;
+    },
+    encodedText: function (text) {
+        return encodeURIComponent(text)
+    },
+};
+
+export default {
+    convert(pattern, text, options) {
+        let result = pattern;
+        Object.keys(builtinOptions).map(key => {
+            const reg = new RegExp(`\\[\\[${key}\\]\\]`, 'g');
+            result = result.replace(reg, `${builtinOptions[key](text)}`);
+        })
 
         Object.keys(options).map(key => {
             const reg = new RegExp(`\\[\\[${key}\\]\\]`, 'g');
-            result = result.replace(reg, `${key}=${options[key]}`);
+            result = result.replace(reg, `${options[key]}`);
         })
         return result;
     }

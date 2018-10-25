@@ -1,8 +1,25 @@
 * {
     box-sizing: border-box;
+    margin: 0;
 }
 
 .text-ellipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.btn {}
+
+.btn-banner {
+    width: 100%;
+    display: block;
+}
+
+.btn-warn {
+    background-color: red;
+    color: #fff;
+}
+
+input.small {
+    width: 40px;
 }
