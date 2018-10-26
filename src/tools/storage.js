@@ -1,5 +1,3 @@
 class Storage {
-    constructor() {
-
-    }
+  constructor() {}
 }
