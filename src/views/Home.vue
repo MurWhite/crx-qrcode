@@ -1,23 +1,34 @@
 <template>
   <div class="home">
-    <ToggleKeys :keys="schemaList[0].keys"/>
-    <QRCode text="1234"/>
+    <ToggleSchema />
+    <ToggleKeys />
+    <QRCode :text="$state.qrcodeText" />
   </div>
 </template>
 
 <script>
 import QRCode from "@/components/QRCode.vue";
-import ToggleKeys from "@/components/ToggleKeys.vue";
+import ToggleKeys from "./modules/ToggleKeys.vue";
+import ToggleSchema from "./modules/ToggleSchema.vue";
 
 export default {
   components: {
     QRCode,
-    ToggleKeys
+    ToggleKeys,
+    ToggleSchema
   },
   data() {
     return {
       schemaList: this.$state.schemaList
     };
+  },
+  mounted() {
+    this.$actions.changeCurrentSchema(0);
+  },
+  methods: {
+    handleKeyOptionsUpdate(options) {
+      this.$actions.changeCurrentSchema(1);
+    }
   }
 };
 </script>

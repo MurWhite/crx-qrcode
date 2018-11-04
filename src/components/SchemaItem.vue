@@ -1,39 +1,58 @@
 <template>
-    <div class="schema-item">
-        <label class="schema-title">
-            <span v-if="underEdit">名称:</span>
-            <input v-model="schemaData.name" type="text" :readonly="!underEdit">
-            <span @click="handleSaveClick">{{underEdit?'保存':'编辑'}}</span>
-        </label>
-        <div v-if="underEdit" class="schema-detail" :class="{editing: underEdit}">
-            <div class="schema-option" data-type="boolean">
-                <div v-for="(key, index) in schemaData.keys" class="option" :key="index">
-                    <span>键名:</span>
-                    <input type="text" v-model="key.name">
-                    <br>
-                    <span>选中时的值</span>
-                    <input class="small" type="text" v-model="key.truthValue" placeholder="选中时的值">
-                    <br>
-                    <span>未选中时的值</span>
-                    <input class="small" type="text" v-model="key.falseValue" placeholder="未选中时的值">
-                    <button @click="removeOption(index)">-</button>
-                </div>
-                <button @click="addOneMoreOption">+</button>
-                <div class="schema-pattern">
-                    <textarea v-model="schemaData.pattern" rows="3" placeholder="Plz input the pattern"></textarea>
-                </div>
-                <div class="schema-preview">
-                    <div class="title">假设页面文字是 "{{sampleUrl}}", 且所有的选项都已选中</div>
-                    <p class="result">{{sampleResult}}</p>
-                </div>
-                <button @click="handleRemoveSelf" class="btn btn-warn btn-banner">删除此模式</button>
-            </div>
+  <div class="schema-item">
+    <label class="schema-title">
+      <span v-if="underEdit">名称:</span>
+      <input v-model="schemaData.name"
+             type="text"
+             :readonly="!underEdit">
+      <span @click="handleSaveClick">{{underEdit?'保存':'编辑'}}</span>
+      <i class="icon icon-save btn-save"></i>
+    </label>
+    <div v-if="underEdit"
+         class="schema-detail"
+         :class="{editing: underEdit}">
+      <div class="schema-options">
+        <div v-for="(key, index) in schemaData.keys"
+             class="option"
+             :key="index">
+          <span>键名:</span>
+          <input type="text"
+                 v-model="key.name">
+          <br>
+          <span>选中时的值:</span>
+          <input class=""
+                 type="text"
+                 v-model="key.truthValue">
+          <br>
+          <span>未选中时的值:</span>
+          <input class=""
+                 type="text"
+                 v-model="key.falseValue">
+          <i class="icon icon-delete btn-remove"
+             @click="removeOption(index)"></i>
         </div>
+        <i class="icon icon-add-circle btn-add"
+           @click="addOneMoreOption"></i>
+      </div>
+      <div class="schema-pattern">
+        <textarea v-model="schemaData.pattern"
+                  rows="3"
+                  placeholder="Plz input the pattern"></textarea>
+      </div>
+      <div class="schema-preview">
+        <div class="title">假设页面文字是 "{{sampleUrl}}", 且所有的选项都已选中</div>
+        <p class="result">{{sampleResult}}</p>
+      </div>
+      <button @click="handleRemoveSelf"
+              class="btn btn-warn btn-banner">删除此模式</button>
     </div>
+  </div>
 </template>
 <script>
 import cloneDeep from "lodash.clonedeep";
 import SchemaTool from "@/tools/schema.js";
+import { notEmpty, notExist } from "@/tools/helper.js";
+
 export default {
   props: {
     schema: Object
@@ -56,7 +75,6 @@ export default {
       sampleResult: ""
     };
   },
-  computed: {},
   watch: {
     schema: {
       immediate: true,
@@ -89,11 +107,36 @@ export default {
     removeOption(index) {
       this.schemaData.keys.splice(index, 1);
     },
+    schemaValidate(schema) {
+      if (notExist(schema.name)) {
+        return Promise.reject("请填写schema名称");
+      }
+      let errMsg;
+      schema.keys.every((key, index) => {
+        if (notExist(key.name)) {
+          errMsg = `请填写第${index + 1}项的键名`;
+          return false;
+        }
+        return true;
+      });
+      if (errMsg) {
+        return Promise.reject(errMsg);
+      }
+      return Promise.resolve();
+    },
     handleSaveClick() {
       if (this.underEdit) {
-        this.$emit("save", this.schemaData);
+        this.schemaValidate(this.schemaData)
+          .then(() => {
+            this.$emit("save", cloneDeep(this.schemaData));
+            this.underEdit = false;
+          })
+          .catch(err => {
+            alert(err);
+          });
+      } else {
+        this.underEdit = !this.underEdit;
       }
-      this.underEdit = !this.underEdit;
     },
     handleRemoveSelf() {
       this.$emit("delete");
@@ -127,6 +170,33 @@ export default {
   }
   .schema-detail {
     padding: 5px;
+    .schema-options {
+      position: relative;
+      margin-bottom: 18px;
+      min-height: 10px;
+      .option {
+        background-color: #efefef;
+        padding: 5px;
+        position: relative;
+        border-radius: 3px;
+        & + .option {
+          margin-top: 5px;
+        }
+        .btn-remove {
+          position: absolute;
+          right: 0;
+          top: 2px;
+          cursor: pointer;
+        }
+      }
+      .btn-add {
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        bottom: 0;
+        transform: translate3d(0, 50%, 0);
+      }
+    }
     .schema-pattern {
       textarea {
         width: 100%;

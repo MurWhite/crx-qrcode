@@ -23,3 +23,28 @@
 input.small {
     width: 40px;
 }
+
+.icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    vertical-align: bottom;
+    background-size: 100% 100%;
+}
+
+.icon-delete {
+    background-image: url("./svg/icon-delete.svg");
+}
+
+.icon-add-circle {
+    background-image: url('./svg/icon-add-circle.svg')
+}
+
+.icon-save {
+    background-image: url('./svg/icon-save.svg')
+}
+
+*[class~="btn-"] {
+    cursor: pointer;
+    user-select: none;
+}

@@ -1,12 +1,14 @@
 <template>
-    <div class="setting-page">
-        <schema-item v-for="(schema, index) in schemaList" :schema="schema" :key="schema.id" @save="handleSaveSchema(index, $event)" 
-                     @delete="handleRemoveSchema(index)"/>
-        <button @click="addOneMoreSchema">+</button>
-    </div>
+  <div class="setting-page">
+    <schema-item v-for="(schema, index) in schemaList"
+                 :schema="schema"
+                 :key="schema.ukey"
+                 @save="handleSaveSchema(index, $event)"
+                 @delete="handleRemoveSchema(index)" />
+    <button @click="addOneMoreSchema">+</button>
+  </div>
 </template>
 <script>
-import cloneDeep from "lodash.clonedeep";
 import SchemaItem from "@/components/SchemaItem.vue";
 export default {
   components: {
@@ -14,32 +16,15 @@ export default {
   },
   data() {
     return {
-      schemaList: [
-        {
-          name: "不做处理",
-          keys: [{ name: "" }],
-          pattern: ""
-        }
-      ]
+      schemaList: this.$state.schemaList
     };
   },
   methods: {
     addOneMoreSchema() {
-      this.schemaList.push({
-        name: "",
-        keys: [
-          {
-            name: "",
-            truthValue: "",
-            falseValue: ""
-          }
-        ],
-        pattern: "",
-        newAdd: true
-      });
+      this.$actions.updateSchema();
     },
     handleSaveSchema(index, nSchema) {
-      this.schemaList.splice(index, 1, cloneDeep(nSchema));
+      this.$actions.updateSchema(nSchema);
     },
     handleRemoveSchema(index) {
       this.schemaList.splice(index, 1);
