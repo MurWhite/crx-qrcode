@@ -1,6 +1,7 @@
 <template>
   <div class="schema-toggle-wrap">
     <span v-for="(s, index) in $state.schemaList"
+          v-if="$state.schemaList.length > 1"
           class="schema-item"
           :class="{active: s.ukey === $state.currentSchema.ukey}"
           :key="s.ukey"
@@ -24,6 +25,7 @@ export default {};
     min-width: 60px;
     padding: 3px 5px;
     text-align: center;
+    cursor: pointer;
 
     &.active {
       color: #fff;

@@ -1,5 +1,6 @@
-import SchemaTool from "@/tools/schema.js";
-import { isDef } from "@/tools/helper.js";
+import SchemaTool from "@/tools/schema";
+import { isDef } from "@/tools/helper";
+import Access from "@/tools/access";
 
 // 超级简单版的vuex
 export class Store {
@@ -34,38 +35,25 @@ Store.install = function install(Vue) {
     }
   });
 };
-
+const schemaSample = {
+  name: "默认",
+  keys: [
+    {
+      name: "名字",
+      falseValue: "noname",
+      truthValue: "havename"
+    }
+  ],
+  pattern: "[[originalText]]&[[名字]]",
+  ukey: 0
+};
 // store的内容
 export default new Store({
   state: {
-    schemaList: [
-      {
-        name: "墨非",
-        keys: [
-          {
-            name: "白波",
-            falseValue: "白波没有",
-            truthValue: "白波有的有的"
-          }
-        ],
-        pattern: "[[白波]]？这是？[[originalText]]",
-        ukey: 1
-      },
-      {
-        name: "DP2",
-        keys: [
-          {
-            name: "标题2",
-            truthValue: "notitlebar=1",
-            falseValue: "notitlebar=0"
-          }
-        ],
-        pattern: "dianping://web?[[标题2]]&url=[[encodedText]]",
-        ukey: 2
-      }
-    ],
+    schemaList: [schemaSample],
     currentSchema: {},
     currentKeys: [],
+    originalText: location.href,
     qrcodeText: "OoO",
     emptySchema: {
       name: "",
@@ -81,15 +69,24 @@ export default new Store({
     }
   },
   actions: {
+    initalData() {
+      Access.obtain("schemaList").then(data => {
+        this.state.schemaList = data.filter(s => !!s) || [schemaSample];
+        this.actions.changeCurrentSchema(0);
+      });
+    },
     changeCurrentSchema(index) {
       let { state } = this;
       state.currentSchema = state.schemaList[index];
     },
-    updateQRText(text, options) {
+    updateOriginalText(text) {
+      this.state.originalText = text;
+    },
+    updateQRText(options) {
       let { state } = this;
       state.qrcodeText = SchemaTool.convert(
         state.currentSchema.pattern,
-        text,
+        state.originalText,
         options
       );
     },
@@ -119,8 +116,11 @@ export default new Store({
           ...schema,
           ...data
         };
-        state.schemaList.splice(uIndex, 1, isRemove ? undefined : schema);
+        if (isRemove) state.schemaList.splice(uIndex, 1);
+        else state.schemaList.splice(uIndex, 1, schema);
       }
+
+      Access.save("schemaList", state.schemaList);
     }
   }
 });

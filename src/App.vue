@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/setting">Setting</router-link>
+    <div class="navgation">
+      <router-link to="/">
+        <i class="icon icon-qrcode"></i>
+      </router-link>
+      <router-link to="/setting">
+        <i class="icon icon-setting"></i>
+      </router-link>
     </div>
     <router-view />
   </div>
@@ -13,6 +17,9 @@ export default {
     return {
       state: this.$state
     };
+  },
+  created() {
+    this.$actions.initalData();
   }
 };
 </script>
@@ -23,14 +30,21 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+  position: relative;
+  padding-top: 24px;
+  background-color: #ffffff;
+  max-width: 400px;
+  margin: 0 auto;
+  .navgation {
+    position: absolute;
+    right: 0;
+    top: 0;
+    a {
+      font-weight: bold;
+      color: #2c3e50;
+      &.router-link-exact-active {
+        display: none;
+      }
     }
   }
 }

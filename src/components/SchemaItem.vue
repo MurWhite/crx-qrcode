@@ -5,8 +5,12 @@
       <input v-model="schemaData.name"
              type="text"
              :readonly="!underEdit">
-      <span @click="handleSaveClick">{{underEdit?'保存':'编辑'}}</span>
-      <i class="icon icon-save btn-save"></i>
+      <i class="icon btn-save"
+         :class="`icon-${underEdit ? 'save':'edit'}`"
+         @click="handleSaveClick"></i>
+      <i v-if="this.underEdit"
+         class="icon icon-cancel btn-save"
+         @click="handleCancelClick"></i>
     </label>
     <div v-if="underEdit"
          class="schema-detail"
@@ -138,6 +142,14 @@ export default {
         this.underEdit = !this.underEdit;
       }
     },
+    handleCancelClick() {
+      this.underEdit = false;
+      if (this.schema.newAdd) {
+        this.handleRemoveSelf();
+      } else {
+        this.schemaData = { ...cloneDeep(this.schema), newAdd: false };
+      }
+    },
     handleRemoveSelf() {
       this.$emit("delete");
     },
@@ -166,6 +178,8 @@ export default {
     background-color: #d7d7d7;
     input {
       flex: 1;
+    }
+    .btn-save {
     }
   }
   .schema-detail {

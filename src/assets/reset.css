@@ -1,50 +1,82 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  min-width: 300px;
+  min-height: 400px;
+  margin: 0 auto;
+  background-color: #efefef;
 }
 
 .text-ellipsis {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+input[type='text'] {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
 }
 
 .btn {}
 
 .btn-banner {
-    width: 100%;
-    display: block;
+  width: 100%;
+  display: block;
 }
 
 .btn-warn {
-    background-color: red;
-    color: #fff;
+  background-color: red;
+  color: #fff;
 }
 
 input.small {
-    width: 40px;
+  width: 40px;
 }
 
 .icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    vertical-align: bottom;
-    background-size: 100% 100%;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  vertical-align: bottom;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .icon-delete {
-    background-image: url("./svg/icon-delete.svg");
+  background-image: url('./svg/icon-delete.svg');
 }
 
 .icon-add-circle {
-    background-image: url('./svg/icon-add-circle.svg')
+  background-image: url('./svg/icon-add-circle.svg');
 }
 
 .icon-save {
-    background-image: url('./svg/icon-save.svg')
+  background-image: url('./svg/icon-save.svg');
 }
 
-*[class~="btn-"] {
-    cursor: pointer;
-    user-select: none;
+.icon-edit {
+  background-image: url('./svg/icon-edit.svg');
+}
+
+.icon-cancel {
+  background-image: url('./svg/icon-cancel.svg');
+}
+
+.icon-setting {
+  background-image: url('./svg/icon-setting.svg');
+}
+
+.icon-qrcode {
+  background-image: url('./svg/icon-qrcode.svg');
+  background-size: 20px 20px;
+}
+
+i[class*='btn-'] {
+  cursor: pointer;
+  user-select: none;
 }

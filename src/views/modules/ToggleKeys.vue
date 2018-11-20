@@ -47,7 +47,7 @@ export default {
       this.updateQRText();
     },
     updateQRText() {
-      this.$actions.updateQRText(location.href, this.keysOption);
+      this.$actions.updateQRText(this.keysOption);
     }
   }
 };
@@ -64,6 +64,7 @@ export default {
     border-radius: 2px;
     margin: 5px;
     color: $baseColor;
+    cursor: pointer;
 
     &.active {
       color: #fff;

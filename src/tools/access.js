@@ -1,13 +1,17 @@
-class Access {
-  constructor() {}
-}
-
-const save = function save(key, val) {
+const savePromise = function save(key, val) {
   return new Promise((res, rej) => {
     const data = {};
     data[key] = val;
     chrome.storage.sync.set(data, function() {
       res();
+    });
+  });
+};
+
+const obtainPromise = function obtain(key) {
+  return new Promise((res, rej) => {
+    chrome.storage.sync.get([key], function(result) {
+      res(result[key]);
     });
   });
 };
@@ -21,8 +25,8 @@ const addListener = function addListener(key, cb) {
 const removeListener = function removeListener(key) {};
 
 export default {
-  obtain(key) {},
-  save(key, val = null) {},
+  obtain: obtainPromise,
+  save: savePromise,
   listen(key, cb) {
     addListener(key, cb);
   }
